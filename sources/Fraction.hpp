@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string>
-#include <iostream>
 using namespace std;
 
 namespace ariel
@@ -22,6 +21,13 @@ namespace ariel
 
         // Copy Constructor
         Fraction(const Fraction &other);
+
+        // De-Constructor
+        ~Fraction() = default;
+
+        // Move Constructor and move assigment operator
+        // So the clang-tidy would work
+        Fraction(Fraction &&other) noexcept;
 
         // Getters
         int getTop() const;

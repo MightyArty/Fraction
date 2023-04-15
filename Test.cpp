@@ -1,6 +1,7 @@
 #include "doctest.h"
 #include "sources/Fraction.hpp"
 #include <stdexcept>
+#include <sstream>
 
 using namespace std;
 using namespace ariel;
@@ -198,5 +199,150 @@ TEST_CASE("Binary Operators")
         result = frac1 / 2.5;
         expected = Fraction(3, 10);
         CHECK(result == expected);
+    }
+}
+
+TEST_CASE("Comparison Operators with Fraction as a second object")
+{
+    Fraction a(5, 3), b(14, 21), c(5, 3), d(2, 3), e(8, 3);
+
+    SUBCASE("operator==")
+    {
+        CHECK(a == c);
+    }
+
+    SUBCASE("operator!=")
+    {
+        CHECK(a != b);
+        CHECK(a != d);
+        CHECK(a != e);
+        CHECK(b != d);
+        CHECK(b != e);
+        CHECK(d != e);
+    }
+
+    SUBCASE("operator<")
+    {
+        CHECK(d < a);
+        CHECK(d < b);
+        CHECK(d < c);
+        CHECK(a < e);
+        CHECK(b < e);
+        CHECK(c < e);
+        CHECK(d < e);
+    }
+
+    SUBCASE("operator>")
+    {
+        CHECK(a > d);
+        CHECK(b > d);
+        CHECK(c > d);
+        CHECK(e > a);
+        CHECK(e > b);
+        CHECK(e > c);
+        CHECK(e > d);
+    }
+
+    SUBCASE("operator<=")
+    {
+        CHECK(d <= a);
+        CHECK(d <= b);
+        CHECK(d <= c);
+        CHECK(a <= e);
+        CHECK(b <= e);
+        CHECK(c <= e);
+        CHECK(d <= e);
+        CHECK(a <= a);
+        CHECK(b <= b);
+        CHECK(c <= c);
+        CHECK(d <= d);
+        CHECK(e <= e);
+    }
+
+    SUBCASE("operator>=")
+    {
+        CHECK(a >= d);
+        CHECK(b >= d);
+        CHECK(c >= d);
+        CHECK(e >= a);
+        CHECK(e >= b);
+        CHECK(e >= c);
+        CHECK(e >= d);
+        CHECK(a >= a);
+        CHECK(b >= b);
+        CHECK(c >= c);
+        CHECK(d >= d);
+        CHECK(e >= e);
+    }
+}
+
+TEST_CASE("Comparison Operators with double as a second object")
+{
+    Fraction frac1(3, 4);
+    double num = 0.75;
+
+    SUBCASE("operator==")
+    {
+        CHECK(frac1 == num);
+        CHECK_FALSE(frac1 == 0.5);
+    }
+
+    SUBCASE("operator!=")
+    {
+        CHECK(frac1 != 0.5);
+        CHECK_FALSE(frac1 != num);
+    }
+
+    SUBCASE("operator<")
+    {
+        CHECK(frac1 < 1.0);
+        CHECK_FALSE(frac1 < 0.5);
+    }
+
+    SUBCASE("operator>")
+    {
+        CHECK(frac1 > 0.5);
+        CHECK_FALSE(frac1 > 1.0);
+    }
+
+    SUBCASE("operator<=")
+    {
+        CHECK(frac1 <= 1.0);
+        CHECK(frac1 <= num);
+        CHECK_FALSE(frac1 <= 0.5);
+    }
+
+    SUBCASE("operator>=")
+    {
+        CHECK(frac1 >= 0.5);
+        CHECK(frac1 >= num);
+        CHECK_FALSE(frac1 >= 1.0);
+    }
+}
+
+TEST_CASE("ostream operator<<")
+{
+    SUBCASE("Printing a Fraction object")
+    {
+        Fraction frac(3, 4);
+        std::ostringstream stream;
+        stream << frac;
+        CHECK_EQ(stream.str(), "3/4");
+    }
+
+    SUBCASE("Printing a Fraction object with negative values")
+    {
+        Fraction frac(-2, 3);
+        std::ostringstream stream;
+        stream << frac;
+        CHECK_EQ(stream.str(), "-2/3");
+    }
+
+    SUBCASE("Printing a Fraction object with bottom of 1")
+    {
+        Fraction frac(5, 1);
+        std::ostringstream stream;
+        stream << frac;
+        CHECK_EQ(stream.str(), "5");
     }
 }
